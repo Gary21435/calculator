@@ -5,6 +5,9 @@
 
 const backspace = "←";
 
+let smth = 1.0;
+console.log(String(smth));
+
 const buttonIDs = ["AC", "+/-", "%", "/", "7", "8", "9", "*", 
     "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "←", "="];
 
@@ -59,6 +62,8 @@ let num2 = null;
 let twoNums = new Array(2);
 let operation = "";
 let mustBeOperation = false;
+let decimal1 = false;
+let decimal2 = false;
 
 const operationArr = ["*", "/", "+", "-", "%"];
 
@@ -68,6 +73,8 @@ function startOver() {
     operation = "";
     screenNum.textContent = 0;
     mustBeOperation = false;
+    decimal1 = false;
+    decimal2 = false;
 }
 
 function doOperation() {
@@ -98,17 +105,36 @@ function doOperation() {
         else ans = num1/100 * num2;
 
     startOver();
+    ans = Math.round(ans*100)/100;
     screenNum.textContent = ans;
     num1=ans;
     mustBeOperation = true;
 }
 
 function displayOperation() {
-    screenNum.textContent = ((num1 !== null) ? num1 : "") + operation + ((num2 !== null) ? num2 : "");
+    let num1Text = num1; 
+    let num2Text = num2;// = (num2 !== null) ? num2 : "";
+    if(!decimal1) num1Text = (num1 !== null) ? num1 : "";
+    else if(decimal1 && num1 === Math.floor(num1)) num1Text = (num1 !== null) ? num1+"." : ".";
+    if(!decimal2) num2Text = (num2 !== null) ? num2 : "";
+    else if(decimal2 && num2 === Math.floor(num2)) num2Text = (num2 !== null) ? num2+"." : ".";
+    screenNum.textContent = num1Text + operation + num2Text;
 }
 
 function handleClick(e) {
     let input = e.target.id;
+
+    if(input === ".") {
+        if(operation == "") {
+            decimal1 = true;
+            displayOperation();
+
+        }
+        else {
+            decimal2 = true;
+            displayOperation();
+        }
+    }
 
     // UNDO
     if(input === backspace) { 
@@ -122,7 +148,7 @@ function handleClick(e) {
                 num1 = Math.floor(num1/10);
                 displayOperation();
             }
-            else {
+            else {  
                 operation = "";
                 displayOperation();
             }
@@ -140,19 +166,35 @@ function handleClick(e) {
 
     let number = Number(input);
     let numCheck = number;
+
+    
     if(number === 0) numCheck = true; //0 is a number
 
     if(num1 == null && !numCheck) {
         console.log("bro what");
         return;
     }
-    else if(numCheck && operation == "") {
-        mustBeOperation ? num1 = number : num1 = num1*10 + number;        
+    else if(numCheck && operation == "") { // NUM1
+        if(mustBeOperation) {
+            startOver();
+            num1 = number; 
+        }
+        else if(!decimal1) {
+            num1 = num1*10 + number;
+        } 
+        else {
+            num1 = num1 + number/10;
+        }
         screenNum.textContent = num1;
         console.log(num1);
     }
-    else if(numCheck && operation !== "") {
-        num2 = num2*10 + number;
+    else if(numCheck && operation !== "") { // NUM2
+        if(!decimal2) {
+            num2 = num2*10 + number;
+        } 
+        else {
+            num2 = num2 + number/10;
+        }
         screenNum.textContent = num1 + operation + num2;
         console.log(num2);
     }
