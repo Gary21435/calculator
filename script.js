@@ -4,10 +4,6 @@
  */
 
 const backspace = "←";
-
-let smth = 1.0;
-console.log(String(smth));
-
 const buttonIDs = ["AC", "+/-", "%", "/", "7", "8", "9", "*", 
     "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "←", "="];
 
@@ -105,7 +101,7 @@ function doOperation() {
         else ans = num1/100 * num2;
 
     startOver();
-    ans = Math.round(ans*100)/100;
+    ans = Math.round(ans*100)/100; // Prevents 1.9999999999999999999
     screenNum.textContent = ans;
     num1=ans;
     mustBeOperation = true;
@@ -171,7 +167,6 @@ function handleClick(e) {
     if(number === 0) numCheck = true; //0 is a number
 
     if(num1 == null && !numCheck) {
-        console.log("bro what");
         return;
     }
     else if(numCheck && operation == "") { // NUM1
@@ -183,37 +178,40 @@ function handleClick(e) {
             num1 = num1*10 + number;
         } 
         else {
-            num1 = num1 + number/10;
+            let str1 = String(num1);
+            if(!str1.includes(".")) str1=str1.concat(".");
+            let dec = str1.length - str1.indexOf(".") - 1;
+            num1 += number/10**(dec+1);
+            num1 = Math.round(num1*100)/100;
         }
         screenNum.textContent = num1;
-        console.log(num1);
     }
     else if(numCheck && operation !== "") { // NUM2
         if(!decimal2) {
             num2 = num2*10 + number;
         } 
         else {
-            num2 = num2 + number/10;
+            let str2 = String(num2);
+            if(!str2.includes(".")) str2=str2.concat(".");
+            let dec = str2.length - str2.indexOf(".") - 1;
+            num2 += number/10**(dec+1);
+            num2 = Math.round(num2*100)/100;
         }
         screenNum.textContent = num1 + operation + num2;
-        console.log(num2);
     }
     else if(!numCheck && num1 != null && num2 == null && operationArr.includes(input)) { // operation
         if(operation === input) return;
         operation = input;
         displayOperation();
         mustBeOperation = false;
-        console.log("operation: ", operation);
     }
     else if(input === "+/-" && (num1 !== null || num2 !== null)) {
         if(operation === "") {
             num1 = -1 * num1;
-            console.log(num1);
             screenNum.textContent = num1;
         }
         else {
             num2 = -1 * num2;
-            console.log(num2);
             screenNum.textContent = num1 + operation + "(" + num2 + ")";
         }
     }
