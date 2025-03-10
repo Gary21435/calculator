@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap');
+
+body {
+    height: 100vh;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color:rgb(135, 175, 210);
+}
+
+
+.calculator {
+    display: flex;
+    flex-direction: column;
+
+    border: 5px solid rgb(40, 12, 12);
+    border-radius: 8px;
+    background-color: rgb(40, 12, 12);
+    
+
+}
+
+
+.screen {
+    background-color: rgb(105, 97, 97);
+    text-align: right;
+    font-size: 90px;
+
+    font-family: "Silkscreen", sans-serif;
+    font-style: normal;
+
+    color: rgb(40, 12, 12);
+    padding: 10px;
+    text-align: right;
+    text-shadow: 1.3px 1.3px #383838;
+
+    border: 5px solid rgb(40, 12, 12);
+}
+
+.btn {
+    font-size: 40px;
+    font-weight: bold;
+    color: rgb(40, 12, 12);
+
+    border: 2px solid rgb(40, 12, 12);
+    border-radius: 10px;
+}
+
+.btn:active {
+    background-color: red;
+}
