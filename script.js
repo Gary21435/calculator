@@ -41,3 +41,71 @@ for(let i = 0; i<buttonIDs.length; i++) {
     btn.textContent = `${buttonIDs[i]}`;
     btn.style.backgroundColor = `${buttonColors[i]}`;
 }
+
+
+
+
+
+let num1 = null;
+let num2 = null;
+let twoNums = new Array(2);
+let operation = "";
+let done = false;
+
+function startOver() { 
+    num1 = null;
+    num2 = null;
+    operation = "";
+}
+
+function doOperation() {
+    let ans = 0;
+
+    if(num2 === 0 && operation == "/") {
+        
+    }
+
+    switch (operation) {
+        case "+":
+            ans = num1 + num2;
+            break;
+        case "-":
+            ans = num1 - num2;
+            break;
+        case "*":
+            ans = num1 * num2;
+            break;
+        case "/":
+            ans = num1 / num2;
+            break;
+    }
+
+}
+
+function handleClick(e) {
+    let input = e.target.id;
+    if(input === "=") {
+
+    }
+
+
+    let number = Number(input);
+    if(num1 == null && !number) {
+        console.log("bro what");
+        return;
+    }
+    else if(number && operation == "") {
+        num1 = num1*10 + number;
+        console.log(num1);
+    }
+    else if(number && operation !== "") {
+        num2 = num2*10 + number;
+        console.log(num2);
+    }
+    else if(!number && num1 != null && num2 == null) {
+        operation = input;
+        console.log("operation: ", input);
+    }
+}
+
+buttons.addEventListener("click", (e) => handleClick(e));
