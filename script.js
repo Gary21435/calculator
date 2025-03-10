@@ -53,7 +53,7 @@ let twoNums = new Array(2);
 let operation = "";
 let mustBeOperation = false;
 
-const operationArr = ["*", "/", "+", "-"];
+const operationArr = ["*", "/", "+", "-", "%"];
 
 function startOver() { 
     num1 = null;
@@ -86,6 +86,9 @@ function doOperation() {
             ans = num1 / num2;
             break;
     }
+    if (operation === "%")
+        if(num2 === null) ans = num1/100;
+        else ans = num1/100 * num2;
 
     startOver();
     screenNum.textContent = ans;
@@ -97,7 +100,10 @@ function handleClick(e) {
     let input = e.target.id;
     console.log(input + " " + num1);
     if(input === "=") {
-        doOperation();
+        if(num2 !== null)
+            doOperation();
+        else if(num2 === null && operation === "%")
+            doOperation();
     }
     if(input === "AC")
         startOver();
@@ -117,7 +123,7 @@ function handleClick(e) {
     }
     else if(numCheck && operation !== "") {
         num2 = num2*10 + number;
-        screenNum.textContent += num2;
+        screenNum.textContent = num1 + operation + num2;
         console.log(num2);
     }
     else if(!numCheck && num1 != null && num2 == null && operationArr.includes(input)) { // operation
