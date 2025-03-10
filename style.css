@@ -20,8 +20,6 @@ body {
     border: 5px solid rgb(40, 12, 12);
     border-radius: 8px;
     background-color: rgb(40, 12, 12);
-    
-
 }
 
 
@@ -51,6 +49,5 @@ body {
 }
 
 .btn:active {
-    background-color: blue !important;
-    color: red;
+    border: 5px solid rgb(40, 12, 12);
 }
