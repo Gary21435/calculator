@@ -135,7 +135,7 @@ function handleClick(e) {
         else {
             num2 = -1 * num2;
             console.log(num2);
-            screenNum.textContent = num1;
+            screenNum.textContent = num1 + operation + "(" + num2 + ")";
         }
     }
 }
