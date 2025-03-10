@@ -108,13 +108,13 @@ function handleClick(e) {
     }
     else if(number && operation !== "") {
         num2 = num2*10 + number;
-        screenNum.textContent = num1;
+        screenNum.textContent += num2;
         console.log(num2);
     }
     else if(!number && num1 != null && num2 == null) {
         if(operationArr.includes(input)) {
             operation = input;
-            screenNum.textContent = operation;
+            screenNum.textContent += operation;
         }
         console.log("operation: ", operation);
     }
