@@ -15,6 +15,7 @@ body {
 .calculator {
     display: flex;
     flex-direction: column;
+    max-width: 600px;
 
     border: 5px solid rgb(40, 12, 12);
     border-radius: 8px;
@@ -29,6 +30,8 @@ body {
 
     font-family: "Silkscreen", sans-serif;
     font-style: normal;
+    white-space: nowrap;
+    overflow-x: hidden;
 
     color: rgb(40, 12, 12);
     padding: 5px;

@@ -146,11 +146,13 @@ function handleClick(e) {
         if(num2 !== null) {
             num2 = Math.floor(num2/10);
             if(num2 === 0) num2 = null;
+            num2Str = num2;
             displayOperation();
         }
         else {
             if(operation === "") {
                 num1 = Math.floor(num1/10);
+                num1Str = num1;
                 displayOperation();
             }
             else {  
@@ -228,10 +230,12 @@ function handleClick(e) {
     else if(input === "+/-" && (num1 !== null || num2 !== null)) {
         if(operation === "") {
             num1 = -1 * num1;
+            num1Str = String(num1);
             screenNum.textContent = num1;
         }
         else {
             num2 = -1 * num2;
+            num2Str = String(num2);
             screenNum.textContent = num1 + operation + "(" + num2 + ")";
         }
     }
