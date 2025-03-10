@@ -1,5 +1,12 @@
+/* --------------------------------------------ALTERNATIVE IMPLEMENTATION----------------------------
+- Let user 'type' in a string of an operation
+- Parse it, checking for correct syntax, then
+ */
+
+const backspace = "←";
+
 const buttonIDs = ["AC", "+/-", "%", "/", "7", "8", "9", "*", 
-    "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="];
+    "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "←", "="];
 
 const blue = "rgb(54, 166, 222)";
 const orange = "rgb(210, 137, 68)";
@@ -8,7 +15,7 @@ const green = "rgb(67, 125, 67)";
 const buttonColors = [
     `${blue}`, `${blue}`, `${blue}`, `${orange}`, `${green}`, `${green}`, `${green}`, `${orange}`, 
     `${green}`, `${green}`, `${green}`, `${orange}`, `${green}`, `${green}`, `${green}`, `${orange}`, 
-    `${green}`, `${green}`, `${orange}`, 
+    `${green}`, `${green}`, `${green}`, `${orange}`, 
 ];
 
 const buttoColors = ["blue", "blue", "blue", "orange", "green", "green", "green", "orange", 
@@ -26,17 +33,17 @@ let btnHeight = calcHeight/5;
 
 buttons.style.width = `${calcWidth}px`;
 buttons.style.height = `${calcHeight}px`;
-
+// Generate calculator
 for(let i = 0; i<buttonIDs.length; i++) {
     const btn = document.createElement("button");
     buttons.appendChild(btn);
 
     btn.classList = `btn ${buttonColors[i]}`;
     btn.id = `${buttonIDs[i]}`;
-    if(buttonIDs[i] === "0")
-        btn.style.width = `${btnWidth*2}px`;
-    else
-        btn.style.width = `${btnWidth}px`;
+    // if(buttonIDs[i] === "0")
+    //     btn.style.width = `${btnWidth*2}px`;
+    // else
+    btn.style.width = `${btnWidth}px`;
     btn.style.height = `${btnHeight}px`;
     btn.style.boxSizing = "border-box";
     btn.textContent = `${buttonIDs[i]}`;
@@ -96,9 +103,32 @@ function doOperation() {
     mustBeOperation = true;
 }
 
+function displayOperation() {
+    screenNum.textContent = ((num1 !== null) ? num1 : "") + operation + ((num2 !== null) ? num2 : "");
+}
+
 function handleClick(e) {
     let input = e.target.id;
-    console.log(input + " " + num1);
+
+    // UNDO
+    if(input === backspace) { 
+        if(num2 !== null) {
+            num2 = Math.floor(num2/10);
+            if(num2 === 0) num2 = null;
+            displayOperation();
+        }
+        else {
+            if(operation === "") {
+                num1 = Math.floor(num1/10);
+                displayOperation();
+            }
+            else {
+                operation = "";
+                displayOperation();
+            }
+        }
+    }
+
     if(input === "=") {
         if(num2 !== null)
             doOperation();
@@ -127,8 +157,9 @@ function handleClick(e) {
         console.log(num2);
     }
     else if(!numCheck && num1 != null && num2 == null && operationArr.includes(input)) { // operation
+        if(operation === input) return;
         operation = input;
-        screenNum.textContent += operation;
+        displayOperation();
         mustBeOperation = false;
         console.log("operation: ", operation);
     }
@@ -146,4 +177,5 @@ function handleClick(e) {
     }
 }
 
-buttons.addEventListener("click", (e) => handleClick(e));
+buttons.addEventListener("click", (e) => handleClick(e)); 
+// implement keyboard support by adding custom event that calls handleClick(e) on a valid key stroke?

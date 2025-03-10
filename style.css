@@ -12,7 +12,6 @@ body {
     background-color:rgb(135, 175, 210);
 }
 
-
 .calculator {
     display: flex;
     flex-direction: column;
