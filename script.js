@@ -18,6 +18,7 @@ const buttoColors = ["blue", "blue", "blue", "orange", "green", "green", "green"
 
 const calculator = document.querySelector(".calculator");
 const buttons = document.querySelector(".buttons");
+const screenNum = document.querySelector(".screen");
 const calcWidth = 600;
 const calcHeight = 600;
 let btnWidth = calcWidth/4;
@@ -52,17 +53,22 @@ let twoNums = new Array(2);
 let operation = "";
 let done = false;
 
+const operationArr = ["*", "/", "+", "-"];
+
 function startOver() { 
     num1 = null;
     num2 = null;
     operation = "";
+    screenNum.textContent = 0;
 }
 
 function doOperation() {
     let ans = 0;
 
     if(num2 === 0 && operation == "/") {
-        
+        alert("You have committed the sin of dividing by ZERO! Shame on thee.");
+        startOver();
+        return;
     }
 
     switch (operation) {
@@ -79,15 +85,16 @@ function doOperation() {
             ans = num1 / num2;
             break;
     }
-
+    screenNum.textContent = ans;
 }
 
 function handleClick(e) {
     let input = e.target.id;
     if(input === "=") {
-
+        doOperation();
     }
-
+    if(input === "AC")
+        startOver();
 
     let number = Number(input);
     if(num1 == null && !number) {
@@ -96,15 +103,20 @@ function handleClick(e) {
     }
     else if(number && operation == "") {
         num1 = num1*10 + number;
+        screenNum.textContent = num1;
         console.log(num1);
     }
     else if(number && operation !== "") {
         num2 = num2*10 + number;
+        screenNum.textContent = num1;
         console.log(num2);
     }
     else if(!number && num1 != null && num2 == null) {
-        operation = input;
-        console.log("operation: ", input);
+        if(operationArr.includes(input)) {
+            operation = input;
+            screenNum.textContent = operation;
+        }
+        console.log("operation: ", operation);
     }
 }
 
