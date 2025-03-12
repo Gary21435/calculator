@@ -112,16 +112,6 @@ function doOperation() {
 }
 
 function displayOperation() {
-    let num1Text = num1; 
-    let num2Text = num2;// = (num2 !== null) ? num2 : "";
-    if(!decimal1) num1Text = (num1 !== null) ? num1 : "";
-    else if(decimal1 && num1 === Math.floor(num1)) num1Text = (num1 !== null) ? num1+"." : ".";
-    console.log(num1);  
-    console.log(Math.floor(num1));
-    console.log(num1+".");  
-
-    if(!decimal2) num2Text = (num2 !== null) ? num2 : "";
-    else if(decimal2 && num2 === Math.floor(num2)) num2Text = (num2 !== null) ? num2+"." : ".";
     screenNum.textContent = num1Str + operation + num2Str;
 }
 
@@ -200,9 +190,10 @@ function handleClick(e) {
         //     // }
             
         // }
-        num1Str += String(number);
-        num1 = Number(num1Str);
-        screenNum.textContent = num1Str;
+        else
+            num1Str += String(number);
+            num1 = Number(num1Str);
+            screenNum.textContent = num1Str;
     }
     else if(numCheck && operation !== "") { // NUM2
         // if(!decimal2) {
