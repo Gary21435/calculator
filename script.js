@@ -1,7 +1,13 @@
 /* --------------------------------------------ALTERNATIVE IMPLEMENTATION----------------------------
 - Let user 'type' in a string of an operation
-- Parse it, checking for correct syntax, then
+- string.pop() it to find relevant info (num2, operation, num1)
+- ...
  */
+
+/* ---------THIS METHOD----------
+1. Enter number or '.', either keyboard or mouse click.
+2. Save 
+*/
 
 const backspace = "←";
 const buttonIDs = ["AC", "+/-", "%", "/", "7", "8", "9", "*", 
@@ -17,14 +23,9 @@ const buttonColors = [
     `${green}`, `${green}`, `${green}`, `${orange}`, 
 ];
 
-const buttoColors = ["blue", "blue", "blue", "orange", "green", "green", "green", "orange", 
-                      "green", "green", "green", "orange", "green", "green", "green", "orange", 
-                      "green", "green", "orange"
-];
-
-const calculator = document.querySelector(".calculator");
-const buttons = document.querySelector(".buttons");
-const screenNum = document.querySelector(".screen");
+const calculator = document.querySelector(".calculator"); 
+const buttons = document.querySelector(".buttons"); // buttons container
+const screenNum = document.querySelector(".screen"); // calculator screen
 const calcWidth = 600;
 const calcHeight = 600;
 let btnWidth = calcWidth/4;
@@ -107,58 +108,76 @@ function doOperation() {
     startOver();
     ans = Math.round(ans*10000000)/10000000; // Prevents 1.9999999999999999999
     screenNum.textContent = ans;
-    num1Str = num1 = ans;
+    num1 = ans;
+    num1Str = String(num1);
+    if (ans%1) decimal1 = true;
     mustBeOperation = true;
 }
 
 function displayOperation() {
+    if(num2 === null) num2Str = "";
+    if(num1 === null) num1Str = "0";
+    if(decimal1 && !mustBeOperation && num1 === null) num1Str = "0."
     screenNum.textContent = num1Str + operation + num2Str;
 }
 
-function handleClick(e) {
+function handleClick(e, optional) {
+
     let input = e.target.id;
+    if(optional) input = optional; 
 
     if(input === ".") {
-        if(operation == "") {
-            decimal1 = true;
+        if(!mustBeOperation && operation == "") { // if no operation has been entered, then we're on num1 still
+            if(decimal1) return;
+            else decimal1 = true;
+            if(num1 === null) num1Str = '0';
             num1Str += input;
-            displayOperation();
+            num1 = 0;
+        }
+        else if(mustBeOperation && operation == "") {
+            decimal1 = true;
+            mustBeOperation = false;
+            num1Str = "0.";
+            num1 = 0;
         }
         else {
-            decimal2 = true;
+            if(decimal2) return;
+            else decimal2 = true;
+            if(num2 === null) num2Str = '0';
             num2Str += input;
-            displayOperation();
+            num2 = 0;
         }
+        displayOperation();
     }
 
     // UNDO
-    if(input === backspace) { 
+    else if(input === backspace) { 
+        mustBeOperation = false;
         if(num2 !== null) {
-            num2 = Math.floor(num2/10);
-            if(num2 === 0) num2 = null;
-            num2Str = num2;
-            displayOperation();
+            if(num2Str.slice(-1) === '.') decimal2 = false;
+            num2Str = num2Str.slice(0, -1);
+            num2 = Number(num2Str);
+            if(num2Str === '0') num2 = null;
         }
         else {
             if(operation === "") {
-                num1 = Math.floor(num1/10);
-                num1Str = num1;
-                displayOperation();
+                if(num1Str.slice(-1) === '.') decimal1 = false;
+                num1Str = num1Str.slice(0, -1);
+                num1 = Number(num1Str);
+                if(num1 === 0) num1 = null;
             }
             else {  
                 operation = "";
-                displayOperation();
             }
         }
+        displayOperation();
     }
 
-    if(input === "=") {
-        if(num2 !== null)
-            doOperation();
-        else if(num2 === null && operation === "%")
-            doOperation();
+    else if(input === "=") {
+        if(operation === "") return;
+        doOperation();
     }
-    if(input === "AC")
+    else if(input === "AC")
         startOver();
 
     let number = Number(input);
@@ -173,42 +192,19 @@ function handleClick(e) {
     else if(numCheck && operation == "") { // NUM1
         if(mustBeOperation) {
             startOver();
-            num1Str = num1 = number; 
-            displayOperation();
+            num1 = number; 
+            num1Str = String(num1);
         }
-        // else if(!decimal1) {
-        //     num1 = num1*10 + number;
-        // } 
-        // else {
-        //     let str1 = String(num1);
-        //     // let dec = str1.length - str1.indexOf(".") - 1;
-        //     // num1 += number/10**(dec+1);
-        //     // num1 = Math.round(num1*100)/100;
-        //     // if(!str1.includes(".")) {
-        //     //     str1 += ".";
-        //     //     num1Str = str1;
-        //     // }
-            
-        // }
-        else
+        else {
+            if (num1Str === '0') num1Str = "";
             num1Str += String(number);
             num1 = Number(num1Str);
-            screenNum.textContent = num1Str;
+        }
+        displayOperation();
     }
     else if(numCheck && operation !== "") { // NUM2
-        // if(!decimal2) {
-        //     num2 = num2*10 + number;
-        // } 
-        // else {
-        //     let str2 = String(num2);
-        //     if(!str2.includes(".")) str2=str2.concat(".");
-        //     let dec = str2.length - str2.indexOf(".") - 1;
-        //     num2 += number/10**(dec+1);
-        //     num2 = Math.round(num2*10000000)/10000000;
-        // }
         num2Str += String(number);
         num2 = Number(num2Str);
-        screenNum.textContent = num2Str;
         displayOperation();
         // screenNum.textContent = num1 + operation + num2;
     }
@@ -232,5 +228,16 @@ function handleClick(e) {
     }
 }
 
+function handleKeys(e) {
+    let key = e.key;
+    if(!(Number(key) !== NaN || operationArr.includes(key) || key === 'Enter' || key === "Backspace" 
+        || key === "."))
+        return;
+    if(key === "Enter") key = '=';
+    else if(key === "Backspace") key = backspace;
+    handleClick(e, key);
+}
+
 buttons.addEventListener("click", (e) => handleClick(e)); 
 // implement keyboard support by adding custom event that calls handleClick(e) on a valid key stroke?
+document.addEventListener("keydown", (e) => handleKeys(e));
